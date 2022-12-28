@@ -15,17 +15,14 @@ module.exports = {
     const suggest = [
       String(interaction.options.getString("location") ?? 'ip'),
     ];
-    //console.log(`SUGGEST STRING IS EQUAL TO = ${String(suggest)} with type ${typeof String(suggest)}`);
+    // console.log(`SUGGEST STRING IS EQUAL TO = ${String(suggest)} with type ${typeof String(suggest)}`);
 
-    if (suggest !== 'ip') {
+    if (suggest != 'ip') {
       fetch(`https://nominatim.openstreetmap.org/search/${suggest}?format=json&addressdetails=1&limit=1&polygon_svg=1`)
         .then(function (response) {
           return (response.json())
         }).then(async function (lData) {
           console.log(lData[0].address)
-          // const temp = [data[0].lat, data[0].lon]
-          // console.log(`Returning: ${temp[0]} and ${temp[1]}`);
-          // return (temp);
 
           fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=${apiKey}&format=json&by=position&lat=${lData[0].lat}&lng=${lData[0].lon}`)
             .then(function (response) {
