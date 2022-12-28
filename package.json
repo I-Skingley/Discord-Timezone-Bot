@@ -14,5 +14,14 @@
     "dotenv": "^16.0.3",
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.20"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/I-Skingley/clockBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/I-Skingley/clockBot/issues"
+  },
+  "homepage": "https://github.com/I-Skingley/clockBot#readme"
 }
