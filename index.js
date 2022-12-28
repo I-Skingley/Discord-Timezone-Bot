@@ -70,8 +70,6 @@ client.on(Events.InteractionCreate, async interaction => {
         if (command.data.name === 'time') {
             var location = await command.execute(interaction);
 
-
-            // fetch('http://worldtimeapi.org/api/timezone/Europe/London')
             console.log(`command response is: ${location}. With type: ${typeof location}`)
             if (String(location) === 'ip') {
                 fetch(`http://worldtimeapi.org/api/ip`)
