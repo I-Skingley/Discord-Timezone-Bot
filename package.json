@@ -1,0 +1,18 @@
+{
+  "name": "clockbot",
+  "version": "1.0.0",
+  "description": "Discord bot for getting the time in different timezones",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "devStart": "nodemon index.js"
+  },
+  "author": "i.skingley",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^2.6.7",
+    "nodemon": "^2.0.20"
+  }
+}
