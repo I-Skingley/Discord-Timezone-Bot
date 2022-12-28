@@ -82,17 +82,6 @@ client.on(Events.InteractionCreate, async interaction => {
                     });
                 return;
             }
-            console.log(`Location variable: ${location}`)
-            // fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=ESAZ0I3JQM9F&format=json&by=position&lat=${location[0]}&lng=${location[1]}`)
-            //     .then(function (response) {
-            //         return response.json();
-            //     }).then(async function (data) {
-            //         var time = convertUnix(data.unixtime);
-            //         await interaction.reply(`The time in ${data.timezone} is ${time}.`)
-            //         console.log('location');
-            //     });
-
-
         }
 
 
