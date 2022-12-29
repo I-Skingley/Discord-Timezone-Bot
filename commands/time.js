@@ -22,7 +22,7 @@ module.exports = {
         .then(function (response) {
           return (response.json())
         }).then(async function (lData) {
-          console.log(lData[0].address)
+          // console.log(lData[0].address)
 
           fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=${apiKey}&format=json&by=position&lat=${lData[0].lat}&lng=${lData[0].lon}`)
             .then(function (response) {
@@ -35,7 +35,6 @@ module.exports = {
 
             });
 
-
         });
         return;
     }
@@ -44,14 +43,6 @@ module.exports = {
 
   }
 };
-
-function convertUnix(unixtime) {
-  var date = new Date(unixtime * 1000);
-  var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-  var min = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-  var sec = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-  return (`${hour}:${min}:${sec}`);
-}
 
 //  Output format
 // [
