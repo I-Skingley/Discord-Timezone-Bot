@@ -36,12 +36,7 @@ client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
     console.log('Bot is online');
     
-    // fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=${tz_api}&format=json&by=position&lat=40.689247&lng=-74.044502`)
-    // .then(function (response) {
-    //     return(response.json())
-    // }).then(async function (data) {
-    //     console.log(data);
-    // });
+
     }
 );
 
@@ -66,11 +61,12 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
     try {
-        /* For the /new slashcommand */
+
         if (command.data.name === 'time') {
             var location = await command.execute(interaction);
 
-            console.log(`command response is: ${location}. With type: ${typeof location}`)
+            // console.log(`command response is: ${location}. With type: ${typeof location}`)
+
             if (String(location) === 'ip') {
                 fetch(`http://worldtimeapi.org/api/ip`)
                     .then(function (response) {
@@ -83,7 +79,6 @@ client.on(Events.InteractionCreate, async interaction => {
                 return;
             }
         }
-
 
         else await command.execute(interaction);
 
