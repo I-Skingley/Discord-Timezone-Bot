@@ -4,7 +4,6 @@ const { Client, Events, Collection, GatewayIntentBits } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const fetch = require('node-fetch');
-const tz_api = process.env.APIKEY_TZDB;
 
 const client = new Client({
     intents: [
@@ -30,23 +29,14 @@ for (const file of commandFiles) {
     }
 }
 
-
 client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
     console.log('Bot is online');
-    
-
-    }
+}
 );
 
-function convertUnix(unixtime) {
-    var date = new Date(unixtime * 1000);
-    var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-    var min = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    var sec = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-    return (`${hour}:${min}:${sec}`);
-}
+
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
@@ -62,25 +52,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     try {
 
-        if (command.data.name === 'time') {
-            var location = await command.execute(interaction);
-
-            // console.log(`command response is: ${location}. With type: ${typeof location}`)
-
-            if (String(location) === 'ip') {
-                fetch(`http://worldtimeapi.org/api/ip`)
-                    .then(function (response) {
-                        return response.json();
-                    }).then(async function (data) {
-                        var time = convertUnix(data.unixtime);
-                        await interaction.reply(`The time in ${data.timezone} is ${time}.`)
-                        console.log('IP');
-                    });
-                return;
-            }
-        }
-
-        else await command.execute(interaction);
+        await command.execute(interaction);
 
     } catch (error) {
         console.error(error);

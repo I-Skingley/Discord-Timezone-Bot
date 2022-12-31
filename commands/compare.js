@@ -1,7 +1,7 @@
 require('dotenv').config();
 var moment = require('moment-timezone');
 
-const { SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 
 apiKey = process.env.APIKEY_TZDB;
 
@@ -34,43 +34,45 @@ module.exports = {
     hour = hour < 10 ? '0' + hour : hour;
     minute = minute < 10 ? '0' + minute : minute;
 
-    //console.log(`hours: ${hour} + minutes: ${minute}`)
-    // console.log(`SUGGEST STRING IS EQUAL TO = ${String(suggest)} with type ${typeof String(suggest)}`);
+    // Fetch the json data based on the input values. Data layout is below
+    fetch(`https://nominatim.openstreetmap.org/search/${suggest}?format=json&addressdetails=1&limit=1&polygon_svg=1`)
+      .then(function (response) {
+        return (response.json())
+      }).then(async function (lData) {
 
-      fetch(`https://nominatim.openstreetmap.org/search/${suggest}?format=json&addressdetails=1&limit=1&polygon_svg=1`)
-        .then(function (response) {
-          return (response.json())
-        }).then(async function (lData) {
-          //console.log(lData[0].address)
+        fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=${apiKey}&format=json&by=position&lat=${lData[0].lat}&lng=${lData[0].lon}`)
+          .then(function (response) {
+            return response.json();
+          }).then(async function (tData) {
 
-          fetch(`http://api.timezonedb.com/v2.1/get-time-zone?key=${apiKey}&format=json&by=position&lat=${lData[0].lat}&lng=${lData[0].lon}`)
-            .then(function (response) {
-              return response.json();
-            }).then(async function (tData) {
+            const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            const clientLoc = moment.tz.guess();
+            var a = moment.tz(`${current} ${hour}:${minute}`, `${moment.tz.guess()}`)
+            var b = a.tz(`${tData.zoneName}`).utc("HH:mm")
+            var x = moment().utcOffset()
+            var y = moment.tz(tData.zoneName).utcOffset()
 
-              // console.log(tData)
-              // console.log(tData.zoneName);
-              const current = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-              var m = moment.tz(`${current} ${hour}:${minute}`,`${moment.tz.guess()}`)
-        
-              // console.log(m.format())
-              // console.log(m.tz(tData.zoneName).format("hh:mm:ss"))
+            const compareEmbed = new EmbedBuilder()
+              .setColor(0x0099FF)
+              .setTitle('Time Conversion')
+              .addFields(
+                { name: `Time in ${clientLoc}`, value: `${hour}:${minute}\n${moment.tz(clientLoc).zoneAbbr()}`, inline: true },
+                { name: " =>", value: `=>\n=>`, inline: true },
+                { name: `Time in ${suggest}`, value: `${b.format("HH:mm")}\n${tData.nextAbbreviation}`, inline: true },
+                { name: `Time difference of`, value: `${(x+y)/60} hours`}
+              );
 
-
-              // console.log(`${hour}:${minute} will be ${moment.utc(`${current} ${hour}:${minute}`).tz(`${tData.zoneName}`).utc().format()} in ${suggest}`)
-
-              var time = tData.formatted;
-
-              await interaction.reply(`${hour}:${minute} in ${moment.tz.guess()} will be ${moment.utc(`${current} ${hour}:${minute}`).tz(`${tData.zoneName}`).utc().format("hh:mm")} in ${suggest} in the ${tData.nextAbbreviation} timezone.`)
-
-            });
-
-        });
-      return;
+            await interaction.reply({ embeds: [compareEmbed] });
+            
+            // Old single line message respone
+            // await interaction.reply(`${hour}:${minute} in ${moment.tz.guess()} will be ${moment.utc(`${current} ${hour}:${minute}`).tz(`${tData.zoneName}`).utc().format("hh:mm")} in ${suggest} in the ${tData.nextAbbreviation} timezone.`)
+          });
+      });
+    return;
   }
 };
 
-//  Output format
+//                      Output format
 // Nominatim
 // [
 //   {

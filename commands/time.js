@@ -3,6 +3,7 @@ require('dotenv').config();
 const { SlashCommandBuilder } = require('discord.js');
 
 apiKey = process.env.APIKEY_TZDB;
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('time')
@@ -15,9 +16,9 @@ module.exports = {
     const suggest = [
       String(interaction.options.getString("location") ?? 'ip'),
     ];
-    // console.log(`SUGGEST STRING IS EQUAL TO = ${String(suggest)} with type ${typeof String(suggest)}`);
 
     if (suggest != 'ip') {
+      // Fetch the json data based on the input values. Data layout is below
       fetch(`https://nominatim.openstreetmap.org/search/${suggest}?format=json&addressdetails=1&limit=1&polygon_svg=1`)
         .then(function (response) {
           return (response.json())
@@ -32,17 +33,30 @@ module.exports = {
               var time = tData.formatted;
 
               await interaction.reply(`The time in ${suggest} in the ${tData.nextAbbreviation} timezone is ${time.slice(time.indexOf(' ') + 1)}.`)
-
             });
-
         });
-        return;
+      return;
     }
 
-    return suggest;
-
+    fetch(`http://worldtimeapi.org/api/ip`)
+      .then(function (response) {
+        return response.json();
+      }).then(async function (data) {
+        var time = convertUnix(data.unixtime);
+        await interaction.reply(`The time in ${data.timezone} is ${time}.`)
+        console.log('IP');
+      });
+    return;
   }
 };
+
+function convertUnix(unixtime) {
+  var date = new Date(unixtime * 1000);
+  var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+  var min = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+  var sec = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+  return (`${hour}:${min}:${sec}`);
+}
 
 //  Output format
 // [
