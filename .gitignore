@@ -1,2 +1,6 @@
 # env files
 .env
+#node modules
+node_modules
+#config
+config.json
